@@ -1,0 +1,16 @@
+ul.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.menu li {
+  display: inline;
+  padding: 5px;
+  margin: 1px;
+  background-color: #eee;
+}
+
+ul.menu li.active {
+  background-color: #ddf;
+}

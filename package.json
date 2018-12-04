@@ -1,0 +1,27 @@
+{
+  "name": "feathersjs-accounts",
+  "version": "1.0.0",
+  "description": "Sample feathersjs local user account & authentication.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@feathersjs/authentication": "^2.1.11",
+    "@feathersjs/authentication-jwt": "^2.0.5",
+    "@feathersjs/authentication-local": "^1.2.5",
+    "@feathersjs/configuration": "^2.0.4",
+    "@feathersjs/express": "^1.2.7",
+    "@feathersjs/feathers": "^3.2.3",
+    "@feathersjs/socketio": "^3.2.6",
+    "@feathersjs/socketio-client": "^1.1.4",
+    "feathers-memory": "^2.2.0",
+    "feathers-nedb": "^3.1.0",
+    "nedb": "^1.8.0",
+    "serve-favicon": "^2.5.0",
+    "socket.io-client": "^2.1.1"
+  }
+}
