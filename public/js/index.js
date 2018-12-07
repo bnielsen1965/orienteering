@@ -4,7 +4,7 @@ var client;
 var apiURL = window.location.href;
 var credentials = {};
 var loggedIn;
-
+var title = 'Orienteering';
 
 // once the page is loaded
 $(document).ready(function() {
@@ -18,13 +18,13 @@ $(document).ready(function() {
 
   // once connected to the API load the login qbit
   socket.on('connect', function () {
-    $('#main').qbit('login', { authenticate: authenticate });
+    $('#main').qbit('login', { authenticate: authenticate, title: title });
   });
 
   // if client logs out then load the login qbit again
   client.on('logout', function () {
     if (loggedIn) {
-      $('#main').qbit('login', { authenticate: authenticate });
+      $('#main').qbit('login', { authenticate: authenticate, title: title });
       loggedIn = false;
     }
   });

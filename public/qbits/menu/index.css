@@ -2,13 +2,22 @@ ul.menu {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  overflow: auto;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
 }
 
 ul.menu li {
   display: inline;
+  float: left;
   padding: 5px;
   margin: 1px;
   background-color: #eee;
+  cursor: pointer;
+}
+
+ul.menu li:hover {
+  color: #484;
 }
 
 ul.menu li.active {

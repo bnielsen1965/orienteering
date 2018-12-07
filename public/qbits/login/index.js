@@ -9,6 +9,7 @@
     // use jQuery qbit to load the Qbit HTML
     jqbit.loadHTML(function () {
       // actions to take after Qbit HTML is loaded
+      $('#logintitle').html(jqbit.args.title);
       $('button#login').click(function () {
         jqbit.args.authenticate($('input#username').val(), $('input#password').val());
       });
