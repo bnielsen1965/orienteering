@@ -7,7 +7,7 @@
     // build settings from defaults and arguments passed to the jQuery qbit
     var settings = this.settings = $.extend({}, defaults, jqbit.args);
     settings.element = element;
-    $('head').append('<link rel="stylesheet" type="text/css" href="' + jqbit.settings.path + 'menu/index.css?_=' + Date.now() + '" />');
+    jqbit.loadCSS();
     // use jQuery qbit to load the Qbit HTML
     jqbit.loadHTML(function () {
       // actions to take after Qbit HTML is loaded

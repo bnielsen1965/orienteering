@@ -151,6 +151,10 @@
           callback();
         }
       });
+    },
+
+    loadCSS: function () {
+      $('head').append('<link rel="stylesheet" type="text/css" href="' + this.getQbitPath().replace(/\/$/, '') + '/' + this.settings.qbit + '/index.css?_=' + Date.now() + '" />');
     }
   });
 

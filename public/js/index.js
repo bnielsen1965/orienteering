@@ -91,7 +91,6 @@ function menuChanged(label) {
   else {
     loadContent(label);
   }
-  console.log(label)
 }
 
 function loadContent(name) {

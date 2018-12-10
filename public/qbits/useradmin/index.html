@@ -1,9 +1,12 @@
 <div class="container" id="useradmin">
-  <b>User Admin</b>
-  <div class="left">
-    <b>Create User</b>
+  <div class="row center"><b>User Admin</b></div>
+  <div class="left box">
+    <div class="row center"><b>Create User</b></div>
     <label>Username</label>
     <input type="text" id="crusername"><br>
+
+    <label>Password</label>
+    <input type="text" id="crpassword"><br>
 
     <label>Group</label>
     <select id="crgroup">
@@ -12,12 +15,10 @@
       <option value="admin">Admin</option>
     </select><br>
 
-    <label>Password</label>
-    <input type="text" id="crpassword"><br>
-
-    <button type="button" id="crbutton">Create</button>
+    <label> </label>
+    <button type="button" id="crcreate">Create</button>
   </div>
-  <div class="left">
+  <div class="left box">
     <table id="userlist"></table>
   </div>
 </div>
