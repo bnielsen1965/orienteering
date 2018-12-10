@@ -6,6 +6,15 @@ var credentials = {};
 var loggedIn;
 var title = 'Orienteering';
 
+var menuLabels = [
+  { label: "Home" },
+  { label: "Check Out" },
+  { label: "Check In" },
+  { label: "Course Admin", groups: ['admin', 'manager'] },
+  { label: "User Admin", groups: ['admin'] },
+  { label: "Logout" }
+];
+
 // once the page is loaded
 $(document).ready(function() {
   showBusy($('#main')); // indicate main is loading
@@ -52,23 +61,27 @@ function authenticate(username, password) {
 
 // call when a user is authenticated
 function authenticated(credentials) {
+  console.log('CR', credentials)
   loggedIn = true;
   showBusy($('#main')); // busy loading main
 
   // build navigation menu
-  var menu = [
-    { label: "Home", active: true },
-    { label: "Check Out" },
-    { label: "Check In" },
-    { label: "Logout" }
-  ];
+  var menu = menuLabels.filter(function (label) {
+    return !label.groups || -1 !== label.groups.indexOf(credentials.group);
+  });
 
   // add application content containers
   $('#main').html('<div id="menu"></div><div id="content"></div>');
-  $('#menu').qbit('menu', { menu: menu, menuChanged: menuChanged });
   showBusy($('#main #content')); // busy loading content
-  // load main content
-  loadContent('Home');
+  $('#menu').qbit('menu', {
+    menu: menu,
+    menuChanged: menuChanged,
+    readyCallback: function () {
+      // load main content
+      $('#menu').qbit().getQbit().setActive('Home');
+      loadContent('Home');
+    }
+  });
 }
 
 function menuChanged(label) {

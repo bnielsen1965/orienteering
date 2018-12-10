@@ -24,6 +24,9 @@
         });
         $(element).find('ul.menu').append(li);
       });
+      if (jqbit.args.readyCallback) {
+        jqbit.args.readyCallback();
+      }
     });
   }
 
@@ -31,7 +34,8 @@
   $.extend(Qbit.prototype, {
     // additional methods attached to new instances of this Qbit
     destroy: destroy,
-    getActive: getActive
+    getActive: getActive,
+    setActive: setActive
   });
 
   function destroy() {
@@ -44,6 +48,14 @@
       return $(ae).data('label');
     }
     return '';
+  }
+
+  function setActive(label) {
+    $(this.settings.element).find('ul.menu li').each(function (i, e) {
+      if ($(e).data('label') === label) {
+        $(e).addClass('active');
+      }
+    });
   }
 
   // add Qbit qbit plugin list
