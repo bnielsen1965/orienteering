@@ -162,8 +162,7 @@
   // preventing against multiple instantiations
   function PluginWrapper(options, comArgs) {
     if (this.length === 1 && !options && !comArgs) {
-      // requested the plugin instance for this element
-      return $(this).data(pluginDataName);
+      return $(findPluginElement(this)).data(pluginDataName);
     }
     else {
       return this.each(function () {
@@ -181,6 +180,16 @@
         newPlugin.loadQbit(newPlugin.settings.qbit);
       });
     }
+  }
+
+  function findPluginElement(element) {
+    if (!element) {
+      return null;
+    }
+    if ($(element).data(pluginDataName)) {
+      return element;
+    }
+    return findPluginElement($(element).parent()[0]);
   }
 
   // extend wrapper methods

@@ -61,7 +61,6 @@ function authenticate(username, password) {
 
 // call when a user is authenticated
 function authenticated(credentials) {
-  console.log('CR', credentials)
   loggedIn = true;
   showBusy($('#main')); // busy loading main
 
@@ -95,8 +94,43 @@ function menuChanged(label) {
 
 function loadContent(name) {
   name = name.toLowerCase().replace(/\s/g, '');
-  $('#main #content').qbit(name);
+  var args = {};
+  switch (name) {
+    case 'useradmin':
+    args = {
+      userService: client.service('users'),
+      getUserList: UserMethods.getUserList,
+      createUser: UserMethods.createUser,
+      deleteUser: UserMethods.deleteUser
+    };
+    break;
+
+    case 'courseadmin':
+    args = {
+      courseService: client.service('course'),
+      getCourseList: CourseMethods.getCourseList,
+      createCourse: CourseMethods.createCourse,
+      deleteCourse: CourseMethods.deleteCourse
+    };
+    break;
+  }
+  $('#main #content').qbit(name, args);
 }
+
+async function findAll(service, query) {
+  let q = Object.assign({}, query);
+  let skip = 0;
+  let results = [];
+  let response;
+  do {
+    q.$skip = skip;
+    response = await service.find({ query: q });
+    results = results.concat(response.data);
+    skip = response.skip + response.limit;
+  } while (response.total > response.data.length + response.skip);
+  return results;
+}
+
 
 // show busy indicator inside an element
 function showBusy(jqElem) {
@@ -115,4 +149,57 @@ function showErrors(errors) {
   errors.forEach(function (error) {
     $('#errors').append(error + '<br>');
   });
+}
+
+
+var CourseMethods = {
+  getCourseList: function () {
+    return findAll(client.service('course'), { $sort: { name: 1 } });
+  },
+
+  createCourse: function (name, description) {
+    client.service('course').create({
+      name: name,
+      description: description
+    })
+    .catch(err => { showErrors([err.message]); });
+  },
+
+  deleteCourse: function (name) {
+    if (!name || !name.length) {
+      showErrors(['Name required']);
+      return;
+    }
+    client.service('course').remove(null, { query: { name: name } })
+    .catch(err => { showErrors([err.message]); });
+  }
+
+};
+
+
+var UserMethods = {
+
+  getUserList: function () {
+    return findAll(client.service('users'), { $sort: { username: 1 } });
+  },
+
+  createUser: function (username, password, group) {
+    client.service('users').create({
+      strategy: 'local',
+      username: username,
+      password: password,
+      group: group
+    })
+    .catch(err => { showErrors([err.message]); });
+  },
+
+  deleteUser: function (username) {
+    if (!username || !username.length) {
+      showErrors(['Username required']);
+      return;
+    }
+    client.service('users').remove(null, { query: { username: username } })
+    .catch(err => { showErrors([err.message]); });
+  }
+
 }

@@ -1,23 +1,23 @@
-#useradmin label {
+#courseadmin label {
   width: 6em;
   display: inline-block;
 }
 
-#userlist {
+#courselist {
   border-collapse: collapse;
 }
 
-#userlist tr td {
+#courselist tr td {
   border-bottom: 1px solid black;
   padding: 5px 10px 0 10px;
 }
 
-#userlist tr th {
+#courselist tr th {
   border-bottom: 1px solid black;
   padding: 5px 10px 0 10px;
   width: 10em;
 }
 
-#userlist tr:last td {
+#courselist tr:last td {
   border-bottom: none;
 }

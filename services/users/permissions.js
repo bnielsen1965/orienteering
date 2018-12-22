@@ -7,8 +7,9 @@ module.exports = app => {
   Users.hooks({
     before: {
       all: [checkPermissions],
-      create: [createWithHash],
-      patch: [createWithHash]
+      create: [createValidation, createWithHash],
+      patch: [createWithHash],
+      remove: [removeValidation]
     },
     after: {
       all: [
@@ -36,6 +37,12 @@ module.exports = app => {
   }
 
 
+  function createValidation(context) {
+    if (!context.data.username) {
+      throw new Error('username required');
+    }
+  }
+
   // use provided password hash or create the password hash
   function createWithHash(context) {
     if (context.data.hash) {
@@ -47,6 +54,16 @@ module.exports = app => {
     else {
       // hash the provided password
       return Local.hooks.hashPassword()(context);
+    }
+  }
+
+  function removeValidation(context) {
+    if (!context.params.query.username) {
+      throw new Error('Must specify username');
+    }
+
+    if (context.params.provider && context.params.user.username === context.params.query.username) {
+      throw new Error('Cannot delete self');
     }
   }
 

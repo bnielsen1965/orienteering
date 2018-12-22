@@ -19,6 +19,7 @@ body {
   width: 100%;
   display: block;
   position: relative;
+  clear: left;
 }
 
 .row.hidden {
@@ -53,33 +54,6 @@ body {
 #loginform {
   display: inline-block;
   margin: 0 auto;
-}
-
-#userlist {
-  border-collapse: collapse;
-}
-
-#userlist tr td {
-  border-bottom: 1px solid black;
-  padding: 5px 10px 0 10px;
-}
-
-#userlist tr th {
-  border-bottom: 1px solid black;
-  padding: 5px 10px 0 10px;
-  width: 10em;
-}
-
-#userlist tr:last td {
-  border-bottom: none;
-}
-
-#createuserform input {
-  width: 15em;
-}
-
-#createuserform select {
-  width: 15em;
 }
 
 #errors {

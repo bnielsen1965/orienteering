@@ -4,6 +4,7 @@ const Feathers = require('@feathersjs/feathers');
 const Configuration = require('@feathersjs/configuration');
 const Transports = require('./transports');
 const Services = require('./services');
+const Channels = require('./channels');
 const Webserver = require('./webserver');
 
 let app = Express(Feathers());
@@ -12,6 +13,7 @@ app.configure(Configuration());
 
 app.configure(Transports);
 app.configure(Services);
+app.configure(Channels);
 app.configure(Webserver);
 
 if (process.argv.length > 2 && process.argv[2] === 'init') {

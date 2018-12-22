@@ -11,8 +11,9 @@
     // use jQuery qbit to load the Qbit HTML
     jqbit.loadHTML(function () {
       // actions to take after Qbit HTML is loaded
-      $(element).find('button#crcreate').click(createUser);
+      $(element).find('button#crcreate').click(userAdminCreateUser);
       getUserList();
+      serviceListeners(settings.userService);
     });
   }
 
@@ -21,66 +22,44 @@
     // additional methods attached to new instances of this Qbit
     destroy: function () {
       $('#useradmin').parent().empty();
-    }
+    },
+    deleteUser: userAdminDeleteUser
   });
 
 
-  function createUser() {
-    var username = $('input#crusername').val();
-    var group = $('select#crgroup').val();
-    var password = $('input#crpassword').val();
-    console.log('CU', {
-      strategy: 'local',
-      username: username,
-      group: group,
-      password: password
-    })
-    client.service('users').create({
-      strategy: 'local',
-      username: username,
-      group: group,
-      password: password
-    })
-    .then(doc => {
-      getUserList();
-    })
-    .catch(err => { showErrors([err.message]); });
+  function userAdminCreateUser() {
+    _this.settings.createUser($('input#crusername').val(), $('input#crpassword').val(), $('select#crgroup').val());
+  }
+
+  function userAdminDeleteUser(username) {
+    _this.settings.deleteUser(username);
+  }
+
+  function serviceListeners(service) {
+    service
+    .on('created', getUserList)
+    .on('removed', getUserList)
+    .on('patched', getUserList)
+    .on('updated', getUserList)
   }
 
 
   function getUserList() {
-    findAll(client.service('users'))
+    _this.settings.getUserList()
     .then(docs => {
       $('#userlist').html('');
       $('#userlist').append('<tr><th>Username</th><th>Group</th><th></th></tr>');
-      console.log('_THIS', _this)
       if (_this && _this.settings && _this.settings.element) {
-      console.log('EL', _this.settings.element.toString());
     }
       docs.forEach(doc => {
-//        var deleteMethod = '$('#menu').qbit().getQbit()'
         $('#userlist').append(
           '<tr><td>' + doc.username + '</td>' +
           '<td>' + doc.group + '</td>' +
-          '<td><button onclick="deleteUser(\'' + doc.username + '\')">Delete</button></td></tr>');
+          '<td><button onclick="console.log($(this).qbit().getQbit().deleteUser(\'' + doc.username + '\'));">Delete</button></td></tr>');
       })
     })
     .catch(err => { showErrors([err.message]); });
   }
-
-
-  async function findAll(service, query, skip) {
-    query = query || {};
-    skip = skip || 0;
-    let response = await service.find({ query: query, $skip: skip });
-    if (response.total > response.data.length + response.data.skip) {
-      return response.data.concat(await findAll(service, query, response.skip + response.limit));
-    }
-    else {
-      return response.data;
-    }
-  }
-
 
   // add Qbit qbit plugin list
   $.fn.qbit.addQbitToList('useradmin', Qbit);
