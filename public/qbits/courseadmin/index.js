@@ -54,7 +54,7 @@
         $('#courselist').append(
           '<tr><td>' + doc.name + '</td>' +
           '<td>' + doc.description + '</td>' +
-          '<td><button onclick="console.log($(this).qbit().getQbit().deleteCourse(\'' + doc.name + '\'));">Delete</button></td></tr>');
+          '<td><button onclick="$(this).qbit().getQbit().deleteCourse(\'' + doc.name + '\');">Delete</button></td></tr>');
       })
     })
     .catch(err => { showErrors([err.message]); });

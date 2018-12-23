@@ -1,8 +1,8 @@
 
 module.exports = app => {
-  const Course = app.service('course')
+  const Card = app.service('card')
 
-  Course.hooks({
+  Card.hooks({
     before: {
       create: [checkPermissions, validate],
       patch: [checkPermissions, validate],
@@ -15,6 +15,9 @@ module.exports = app => {
   function checkPermissions(context) {
     if (context.params.provider) {
       if (context.params.user && -1 !== ['admin', 'manager'].indexOf(context.params.user.group)) {
+        return;
+      }
+      else if (context.params.user && context.params.user.group === ['operator'] && context.params.method === 'find') {
         return;
       }
       else {

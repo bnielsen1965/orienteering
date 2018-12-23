@@ -1,0 +1,23 @@
+#cardadmin label {
+  width: 6em;
+  display: inline-block;
+}
+
+#cardlist {
+  border-collapse: collapse;
+}
+
+#cardlist tr td {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+}
+
+#cardlist tr th {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+  width: 10em;
+}
+
+#cardlist tr:last td {
+  border-bottom: none;
+}

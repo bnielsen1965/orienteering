@@ -1,7 +1,9 @@
 
 const ServicesList = [
   { serviceName: 'users', groups: [] },
-    { serviceName: 'course', groups: [] }
+  { serviceName: 'card', groups: [] },
+  { serviceName: 'course', groups: [] },
+  { serviceName: 'smartcard', groups: [] }
 ];
 
 module.exports = app => {

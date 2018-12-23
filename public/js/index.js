@@ -10,6 +10,7 @@ var menuLabels = [
   { label: "Home" },
   { label: "Check Out" },
   { label: "Check In" },
+  { label: "Card Admin", groups: ['admin', 'manager'] },
   { label: "Course Admin", groups: ['admin', 'manager'] },
   { label: "User Admin", groups: ['admin'] },
   { label: "Logout" }
@@ -113,6 +114,16 @@ function loadContent(name) {
       deleteCourse: CourseMethods.deleteCourse
     };
     break;
+
+    case 'cardadmin':
+    args = {
+      smartcardService: client.service('smartcard'),
+      cardService: client.service('card'),
+      getCardList: CardMethods.getCardList,
+      createCard: CardMethods.createCard,
+      deleteCard: CardMethods.deleteCard
+    };
+    break;
   }
   $('#main #content').qbit(name, args);
 }
@@ -171,6 +182,32 @@ var CourseMethods = {
       return;
     }
     client.service('course').remove(null, { query: { name: name } })
+    .catch(err => { showErrors([err.message]); });
+  }
+
+};
+
+
+var CardMethods = {
+  getCardList: function () {
+    console.log('GET')
+    return findAll(client.service('card'), { $sort: { name: 1 } });
+  },
+
+  createCard: function (name, uid) {
+    client.service('card').create({
+      name: name,
+      uid: uid
+    })
+    .catch(err => { showErrors([err.message]); });
+  },
+
+  deleteCard: function (name) {
+    if (!name || !name.length) {
+      showErrors(['Name required']);
+      return;
+    }
+    client.service('card').remove(null, { query: { name: name } })
     .catch(err => { showErrors([err.message]); });
   }
 
