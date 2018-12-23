@@ -3,6 +3,7 @@ const ServicesList = [
   { serviceName: 'users', groups: [] },
   { serviceName: 'card', groups: [] },
   { serviceName: 'course', groups: [] },
+  { serviceName: 'participant', groups: [] },
   { serviceName: 'smartcard', groups: [] }
 ];
 

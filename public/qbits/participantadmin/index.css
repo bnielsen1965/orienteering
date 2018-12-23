@@ -1,0 +1,23 @@
+#participantadmin label {
+  width: 6em;
+  display: inline-block;
+}
+
+#participantlist {
+  border-collapse: collapse;
+}
+
+#participantlist tr td {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+}
+
+#participantlist tr th {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+  width: 10em;
+}
+
+#participantlist tr:last td {
+  border-bottom: none;
+}

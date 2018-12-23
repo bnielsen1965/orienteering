@@ -7,12 +7,13 @@ var loggedIn;
 var title = 'Orienteering';
 
 var menuLabels = [
-  { label: "Home" },
-  { label: "Check Out" },
-  { label: "Check In" },
-  { label: "Card Admin", groups: ['admin', 'manager'] },
-  { label: "Course Admin", groups: ['admin', 'manager'] },
-  { label: "User Admin", groups: ['admin'] },
+  { label: "Home", qbit: 'home' },
+  { label: "Check Out", qbit: 'checkout' },
+  { label: "Check In", qbit: 'checkin' },
+  { label: "Participants", qbit: 'participantadmin', groups: ['admin', 'manager'] },
+  { label: "Cards", qbit: 'cardadmin', groups: ['admin', 'manager'] },
+  { label: "Courses", qbit: 'courseadmin', groups: ['admin', 'manager'] },
+  { label: "Users", qbit: 'useradmin', groups: ['admin'] },
   { label: "Logout" }
 ];
 
@@ -79,53 +80,50 @@ function authenticated(credentials) {
     readyCallback: function () {
       // load main content
       $('#menu').qbit().getQbit().setActive('Home');
-      loadContent('Home');
+//      loadContent('Home');
     }
   });
 }
 
-function menuChanged(label) {
-  if (label === 'Logout') {
+function menuChanged(menuItem) {
+  if (menuItem.label === 'Logout') {
     client.logout();
   }
   else {
-    loadContent(label);
+    loadContent(menuItem);
   }
 }
 
-function loadContent(name) {
-  name = name.toLowerCase().replace(/\s/g, '');
+function loadContent(menuItem) {
+//  name = name.toLowerCase().replace(/\s/g, '');
   var args = {};
-  switch (name) {
+  switch (menuItem.qbit) {
     case 'useradmin':
     args = {
-      userService: client.service('users'),
-      getUserList: UserMethods.getUserList,
-      createUser: UserMethods.createUser,
-      deleteUser: UserMethods.deleteUser
+      userService: client.service('users')
     };
     break;
 
     case 'courseadmin':
     args = {
-      courseService: client.service('course'),
-      getCourseList: CourseMethods.getCourseList,
-      createCourse: CourseMethods.createCourse,
-      deleteCourse: CourseMethods.deleteCourse
+      courseService: client.service('course')
+    };
+    break;
+
+    case 'participantadmin':
+    args = {
+      participantService: client.service('participant')
     };
     break;
 
     case 'cardadmin':
     args = {
       smartcardService: client.service('smartcard'),
-      cardService: client.service('card'),
-      getCardList: CardMethods.getCardList,
-      createCard: CardMethods.createCard,
-      deleteCard: CardMethods.deleteCard
+      cardService: client.service('card')
     };
     break;
   }
-  $('#main #content').qbit(name, args);
+  $('#main #content').qbit(menuItem.qbit, args);
 }
 
 async function findAll(service, query) {
@@ -160,83 +158,4 @@ function showErrors(errors) {
   errors.forEach(function (error) {
     $('#errors').append(error + '<br>');
   });
-}
-
-
-var CourseMethods = {
-  getCourseList: function () {
-    return findAll(client.service('course'), { $sort: { name: 1 } });
-  },
-
-  createCourse: function (name, description) {
-    client.service('course').create({
-      name: name,
-      description: description
-    })
-    .catch(err => { showErrors([err.message]); });
-  },
-
-  deleteCourse: function (name) {
-    if (!name || !name.length) {
-      showErrors(['Name required']);
-      return;
-    }
-    client.service('course').remove(null, { query: { name: name } })
-    .catch(err => { showErrors([err.message]); });
-  }
-
-};
-
-
-var CardMethods = {
-  getCardList: function () {
-    console.log('GET')
-    return findAll(client.service('card'), { $sort: { name: 1 } });
-  },
-
-  createCard: function (name, uid) {
-    client.service('card').create({
-      name: name,
-      uid: uid
-    })
-    .catch(err => { showErrors([err.message]); });
-  },
-
-  deleteCard: function (name) {
-    if (!name || !name.length) {
-      showErrors(['Name required']);
-      return;
-    }
-    client.service('card').remove(null, { query: { name: name } })
-    .catch(err => { showErrors([err.message]); });
-  }
-
-};
-
-
-var UserMethods = {
-
-  getUserList: function () {
-    return findAll(client.service('users'), { $sort: { username: 1 } });
-  },
-
-  createUser: function (username, password, group) {
-    client.service('users').create({
-      strategy: 'local',
-      username: username,
-      password: password,
-      group: group
-    })
-    .catch(err => { showErrors([err.message]); });
-  },
-
-  deleteUser: function (username) {
-    if (!username || !username.length) {
-      showErrors(['Username required']);
-      return;
-    }
-    client.service('users').remove(null, { query: { username: username } })
-    .catch(err => { showErrors([err.message]); });
-  }
-
 }

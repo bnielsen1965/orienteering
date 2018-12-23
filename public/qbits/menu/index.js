@@ -1,9 +1,10 @@
 
 (function ($) {
   var defaults = {};
-
+  var _this;
   // Qbit constructor
   var Qbit = function (element, jqbit) {
+    _this = this;
     // build settings from defaults and arguments passed to the jQuery qbit
     var settings = this.settings = $.extend({}, defaults, jqbit.args);
     settings.element = element;
@@ -13,14 +14,14 @@
       // actions to take after Qbit HTML is loaded
       jqbit.args.menu.forEach(function (menuItem) {
         var li = $('<li>').html(menuItem.label);
-        li.data('label', menuItem.label);
+        li.data('menu', menuItem);
         if (menuItem.active) {
           li.addClass('active');
         }
         $(li).click(function () {
           $(element).find('ul.menu li.active').removeClass('active');
           $(this).addClass('active');
-          jqbit.args.menuChanged($(this).data('label'));
+          jqbit.args.menuChanged($(this).data('menu'));
         });
         $(element).find('ul.menu').append(li);
       });
@@ -45,15 +46,17 @@
   function getActive() {
     var ae = $(this.settings.element).find('li.active')[0];
     if (ae) {
-      return $(ae).data('label');
+      return $(ae).data('menu');
     }
     return '';
   }
 
   function setActive(label) {
     $(this.settings.element).find('ul.menu li').each(function (i, e) {
-      if ($(e).data('label') === label) {
+      var menuItem = $(e).data('menu');
+      if (menuItem && menuItem.label === label) {
         $(e).addClass('active');
+        _this.settings.menuChanged(menuItem);
       }
     });
   }

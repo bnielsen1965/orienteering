@@ -25,8 +25,7 @@
       $('#cardadmin').parent().empty();
       _this.settings.smartcardService.removeAllListeners('card_uid');
     },
-    deleteCard: cardAdminDeleteCard,
-    cardUID: cardAdminCardUID
+    deleteCard: cardAdminDeleteCard
   });
 
 
@@ -35,11 +34,20 @@
   }
 
   function cardAdminCreateCard() {
-    _this.settings.createCard($('input#crname').val(), $('input#cruid').val());
+    _this.settings.cardService.create({
+      name: $('input#crname').val(),
+      uid: $('input#cruid').val()
+    })
+    .catch(err => { showErrors([err.message]); });
   }
 
   function cardAdminDeleteCard(name) {
-    _this.settings.deleteCard(name);
+    if (!name || !name.length) {
+      showErrors(['Name required']);
+      return;
+    }
+    _this.settings.cardService.remove(null, { query: { name: name } })
+    .catch(err => { showErrors([err.message]); });
   }
 
   function serviceListeners(service) {
@@ -51,7 +59,7 @@
   }
 
   function getCardList() {
-    _this.settings.getCardList()
+    findAll(_this.settings.cardService, { $sort: { name: 1 } })
     .then(docs => {
       $('#cardlist').html('');
       $('#cardlist').append('<tr><th>Name</th><th>UID</th><th></th></tr>');

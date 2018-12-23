@@ -28,11 +28,20 @@
 
 
   function courseAdminCreateCourse() {
-    _this.settings.createCourse($('input#crname').val(), $('textarea#crdescription').val());
+    _this.settings.courseService.create({
+      name: $('input#crname').val(),
+      description: $('textarea#crdescription').val()
+    })
+    .catch(err => { showErrors([err.message]); });
   }
 
   function courseAdminDeleteCourse(name) {
-    _this.settings.deleteCourse(name);
+    if (!name || !name.length) {
+      showErrors(['Name required']);
+      return;
+    }
+    _this.settings.courseService.remove(null, { query: { name: name } })
+    .catch(err => { showErrors([err.message]); });
   }
 
   function serviceListeners(service) {
@@ -44,7 +53,7 @@
   }
 
   function getCourseList() {
-    _this.settings.getCourseList()
+    findAll(_this.settings.courseService, { $sort: { name: 1 } })
     .then(docs => {
       $('#courselist').html('');
       $('#courselist').append('<tr><th>Name</th><th>Description</th><th></th></tr>');
