@@ -1,6 +1,6 @@
 
 const Path = require('path');
-const NeDB = require('nedb');
+const NeDB = require('nedb-core');
 const Service = require('feathers-nedb');
 const Permissions = require('./permissions');
 

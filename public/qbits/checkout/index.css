@@ -1,0 +1,28 @@
+#currentcheckout {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+#checkoutadmin label {
+  width: 6em;
+  display: inline-block;
+}
+
+#checkoutlist {
+  border-collapse: collapse;
+}
+
+#checkoutlist tr td {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+}
+
+#checkoutlist tr th {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+  width: 10em;
+}
+
+#checkoutlist tr:last td {
+  border-bottom: none;
+}

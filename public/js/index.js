@@ -125,6 +125,15 @@ function loadContent(menuItem) {
       cardService: client.service('card')
     };
     break;
+
+    case 'checkout':
+    args = {
+      courseService: client.service('course'),
+      participantService: client.service('participant'),
+      cardService: client.service('card'),
+      smartcardService: client.service('smartcard')
+    };
+    break;
   }
   $('#main #content').qbit(menuItem.qbit, args);
 }

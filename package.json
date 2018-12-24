@@ -1,14 +1,18 @@
 {
   "name": "orienteering",
   "version": "1.0.0",
-  "description": "Orienteering.",
+  "description": "Orienteering competition tracker.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["orienteering"],
+  "author": "Bryan Nielsen (@bnielsen1965)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bnielsen1965/orienteering"
+  },
   "dependencies": {
     "@feathersjs/authentication": "^2.1.11",
     "@feathersjs/authentication-jwt": "^2.0.5",
@@ -20,7 +24,7 @@
     "@feathersjs/socketio-client": "^1.1.4",
     "feathers-memory": "^2.2.0",
     "feathers-nedb": "^3.1.0",
-    "nedb": "^1.8.0",
+    "nedb-core": "^3.0.6",
     "pcsclite": "^0.6.0",
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.1.1"
