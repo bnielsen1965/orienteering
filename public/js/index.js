@@ -106,7 +106,10 @@ function loadContent(menuItem) {
 
     case 'courseadmin':
     args = {
-      courseService: client.service('course')
+      courseService: client.service('course'),
+      participantService: client.service('participant'),
+      cardService: client.service('card'),
+      smartcardService: client.service('smartcard')
     };
     break;
 

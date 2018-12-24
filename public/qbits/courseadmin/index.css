@@ -10,14 +10,36 @@
 #courselist tr td {
   border-bottom: 1px solid black;
   padding: 5px 10px 0 10px;
+  max-width: 12em;
 }
 
 #courselist tr th {
   border-bottom: 1px solid black;
   padding: 5px 10px 0 10px;
-  width: 10em;
+  min-width: 5em;
 }
 
 #courselist tr:last td {
+  border-bottom: none;
+}
+
+
+#courseparticipantslist {
+  border-collapse: collapse;
+}
+
+#courseparticipantslist tr td {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+  max-width: 12em;
+}
+
+#courseparticipantslist tr th {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+  min-width: 5em;
+}
+
+#courseparticipantslist tr:last td {
   border-bottom: none;
 }
