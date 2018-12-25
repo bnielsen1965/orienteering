@@ -24,38 +24,81 @@
     destroy: function () {
       $('#checkout').parent().empty();
       _this.settings.smartcardService.removeAllListeners('card_uid');
-//      _this.settings.courseService.removeAllListeners('patch');
     }
   });
 
 
-  function checkoutCardUID(uid) {
+  function chime(url) {
+    $('#chime').remove();
+    var audio = $('<audio id="chime" src="' + url + '">');
+    $(_this.settings.element).append(audio);
+    $('#chime')[0].oncanplay = function () { this.play(); };
+  }
+
+  async function getParticipantCourse(uid) {
     var courseName = $(_this.settings.element).find('select#selcoursename').val();
     if (!courseName.length) {
-      showErrors(['Select course for check out']);
-      return;
+      throw new Error('Select a course.');
     }
-    _this.settings.courseService.find({ query: { name: courseName } })
-    .then(function (result) {
-      if (!result.data.length) {
-        throw new Error('Failed to find course ' + courseName);
+    var result = await _this.settings.courseService.find({
+      query: {
+        name: courseName,
+        participants: {
+          $elemMatch: { "card.uid": uid, "starttime": { $exists: false } }
+        }
       }
-      return _this.settings.courseService.patch(
-        null,
-        { $set: { "participants.$.starttime": new Date() } },
-        { query: { _id: result.data[0]._id.toString(), "participants.card.uid": uid, "participants.starttime": { $exists: false } } }
-      );
+    });
+    if (!result.data.length) {
+      throw new Error('Check out failed. Already checked out or not participating in course.');
+    }
+    return result.data[0];
+  }
+
+  async function setParticipantStarttime(course, uid) {
+    // find the array index for the participant
+    var pi = course.participants.reduce(function (acc, row, rowi) {
+      return (row.card.uid === uid ? rowi : acc);
+    }, -1);
+    // build query and set objects
+    var query = {
+      _id: course._id.toString()
+    };
+    query['participants.' + pi + '.card.uid'] = uid;
+    var set = {};
+    set['participants.' + pi + '.starttime'] = new Date();
+    // try patching
+    var docs = await _this.settings.courseService.patch(
+      null,
+      { $set: set },
+      { query: query }
+    );
+    if (!docs.length) {
+      throw new Error('Check out failed.');
+    }
+    return docs[0];
+  }
+
+  function checkoutCardUID(uid) {
+    showErrors([]);
+    getParticipantCourse(uid)
+    .then(function (course) {
+      return setParticipantStarttime(course, uid);
     })
-    .then(function (docs) {
-      if (docs.length) {
-        var row = docs[0].participants.reduce(function (acc, row) {
-          return row.card.uid === uid ? row : acc;
-        }, null);
-        var co = new Date(row.starttime);
-        $('#currentcheckout').html(row.participant.lastname + ', ' + row.participant.firstname + ' :: ' + co.toLocaleTimeString());
+    .then(function (doc) {
+      if (!doc) {
+        throw new Error('Check out failed.');
       }
+      var row = doc.participants.reduce(function (acc, row) {
+        return row.card.uid === uid ? row : acc;
+      }, null);
+      var co = new Date(row.starttime);
+      $('#currentcheckout').html(row.participant.lastname + ', ' + row.participant.firstname + ' :: ' + co.toLocaleTimeString());
+      chime(_this.settings.chimeSuccess);
     })
-    .catch(function (err) { showErrors([err.message]); });
+    .catch(function (err) {
+      showErrors([err.message]);
+      chime(_this.settings.chimeFail);
+    });
   }
 
 // TODO add listener in case some other process changes course participants
@@ -68,7 +111,7 @@
   }
 
   function getCourses() {
-    findAll(_this.settings.courseService, {})
+    findAll(_this.settings.courseService, { $sort: { name: 1 } })
     .then(function (courses) {
       $(_this.settings.element).find('select#selcoursename').html('<option value="">...</option>');
       courses.forEach(function (course) {

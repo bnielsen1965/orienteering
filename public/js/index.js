@@ -131,7 +131,20 @@ function loadContent(menuItem) {
       courseService: client.service('course'),
       participantService: client.service('participant'),
       cardService: client.service('card'),
-      smartcardService: client.service('smartcard')
+      smartcardService: client.service('smartcard'),
+      chimeSuccess: 'audio/chime_success.wav',
+      chimeFail: 'audio/chime_fail.wav'
+    };
+    break;
+
+    case 'checkin':
+    args = {
+      courseService: client.service('course'),
+      participantService: client.service('participant'),
+      cardService: client.service('card'),
+      smartcardService: client.service('smartcard'),
+      chimeSuccess: 'audio/chime_success.wav',
+      chimeFail: 'audio/chime_fail.wav'
     };
     break;
   }
