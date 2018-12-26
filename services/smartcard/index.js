@@ -52,7 +52,7 @@ module.exports = app => {
     });
 
     reader.on('status', status => {
-      let changes = this.state ^ status.state;
+      let changes = reader.state ^ status.state;
       if (changes) {
         if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
           reader.disconnect(reader.SCARD_LEAVE_CARD, err => {
@@ -64,7 +64,7 @@ module.exports = app => {
           });
         }
         else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-          reader.connect({ share_mode : this.SCARD_SHARE_SHARED }, (err, protocol) => {
+          reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, (err, protocol) => {
             if (err) {
               service.emit('error', err.message);
             } else {
