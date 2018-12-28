@@ -1,12 +1,13 @@
-# feathersjs-accounts
+# orienteering
 
-Sample feathersjs local user account & authentication.
+Orienteering is an application used to assist in managing an orienteering competition.
 
-The application provides a [feathersjs](https://feathersjs.com/) based API and
-hosts a web page that can be loaded in a browser to test the user account
-features. [NeDB](https://github.com/louischatriot/nedb) is used as the
-database so an additional database server is not required to use the sample
-application.
+
+# requirements
+
+- Laptop or workstation
+- Smartcard reader
+- Smartcards
 
 
 ## build
@@ -17,8 +18,8 @@ to install the dependencies.
 > NOTE: I've only tested with node.js 8.11
 
 ```shell
-git clone https://github.com/bnielsen1965/feathersjs-accounts
-cd feathersjs-accounts
+git clone https://github.com/bnielsen1965/orienteering
+cd orienteering
 npm install
 ```
 
@@ -37,18 +38,9 @@ Once the database is initialized the init argument will not be needed the next
 time you run the application.
 
 
-## testing accounts
+## running the application
 
-After starting up the application you must use a web browser to open the web
-page that is hosted by the application. In the browser address bar enter the
-address http://localhost:3030/
+Run the application in a terminal then use a web browser to open the application page.
+ http://localhost:3030/
 
 > NOTE: The default administrative username and password are *admin* and *admin*.
-
-
-## TODO
-- Add session storage.
-- Implement channels to listen for changes to database.
-- Validate user input.
-- Make data store configurable to simplify implementing other databases.
-- Add throttling to authentication service to prevent brute force attack.

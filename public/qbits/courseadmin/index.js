@@ -36,6 +36,7 @@
     _this.settings.courseService.create({
       name: $('input#crname').val(),
       description: $('textarea#crdescription').val(),
+      delay: $('select#crstdelay').val(),
       participants: []
     })
     .catch(function (err) { showErrors([err.message]); });
@@ -179,11 +180,12 @@
     findAll(_this.settings.courseService, { $sort: { name: 1 } })
     .then(function (docs) {
       $('#courselist').html('');
-      $('#courselist').append('<tr><th>Name</th><th>Description</th><th></th></tr>');
+      $('#courselist').append('<tr><th>Name</th><th>Description</th><th>Delay</th><th></th></tr>');
       docs.forEach(function (doc) {
         $('#courselist').append(
           '<tr><td>' + doc.name + '</td>' +
           '<td>' + doc.description + '</td>' +
+          '<td>' + doc.delay + ' min</td>' +
           '<td>' +
           '<button onclick="$(this).qbit().getQbit().deleteCourse(\'' + doc.name + '\');">Delete</button>' +
           '<button onclick="$(this).qbit().getQbit().courseParticipants(\'' + doc.name + '\');">Participants</button>' +

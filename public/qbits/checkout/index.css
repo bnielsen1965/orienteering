@@ -1,4 +1,4 @@
-#currentcheckout {
+#currentcheckout, #nextdelay {
   font-weight: bold;
   font-size: 2em;
 }
@@ -25,4 +25,12 @@
 
 #checkoutlist tr:last td {
   border-bottom: none;
+}
+
+.ready {
+  color: green;
+}
+
+.delay {
+  color: red;
 }

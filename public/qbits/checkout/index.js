@@ -64,8 +64,9 @@
       _id: course._id.toString()
     };
     query['participants.' + pi + '.card.uid'] = uid;
-    var set = {};
-    set['participants.' + pi + '.starttime'] = new Date();
+    var starttime = new Date();
+    var set = { laststarttime: starttime };
+    set['participants.' + pi + '.starttime'] = starttime;
     // try patching
     var docs = await _this.settings.courseService.patch(
       null,
@@ -80,6 +81,12 @@
 
   function checkoutCardUID(uid) {
     showErrors([]);
+    var d = $(_this.settings.element).find('#nextdelay').data('delay');
+    if (d) {
+      showErrors(['Wait until ready.']);
+      chime(_this.settings.chimeFail);
+      return;
+    }
     getParticipantCourse(uid)
     .then(function (course) {
       return setParticipantStarttime(course, uid);
@@ -137,8 +144,53 @@
           '<td>' + row.card.name + '</td>' +
           '<td>' + (row.starttime ? new Date(row.starttime).toLocaleTimeString() : 'Waiting') + '</td></tr>');
       });
+      setCountdown(result.data[0].laststarttime, result.data[0].delay);
     })
     .catch(function (err) { showErrors([err.message]); });
+  }
+
+  function setCountdown(starttime, delay) {
+    starttime = new Date(starttime || 0);
+    if (Date.now() - starttime.getTime() < delay * 60 * 1000) {
+      nextDelayed(starttime, delay);
+    }
+    else {
+      nextReady();
+    }
+  }
+
+  function nextDelayed(starttime, delay) {
+    $(_this.settings.element).find('#nextdelay')
+    .html('')
+    .removeClass('ready')
+    .addClass('delay')
+    .data('delay', (delay * 60 * 1000) - (Date.now() - starttime.getTime()));
+    countDown();
+  }
+
+  function nextReady() {
+    $(_this.settings.element).find('#nextdelay')
+    .html('Ready')
+    .removeClass('delay')
+    .addClass('ready')
+    .data('delay', 0);
+  }
+
+  function countDown() {
+    var cd = $(_this.settings.element).find('#nextdelay').data('delay');
+    var min = Math.floor(cd / 60000);
+    var sec = Math.floor(cd % 60000 / 1000);
+    $(_this.settings.element).find('#nextdelay').html((min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec);
+    setTimeout(function () {
+      cd -= 1000;
+      $(_this.settings.element).find('#nextdelay').data('delay', cd);
+      if (cd > 0) {
+        countDown();
+      }
+      else {
+        nextReady();
+      }
+    }, 1000);
   }
 
   // add Qbit qbit plugin list
