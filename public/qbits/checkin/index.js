@@ -24,7 +24,6 @@
     destroy: function () {
       $('#checkin').parent().empty();
       _this.settings.smartcardService.removeAllListeners('card_uid');
-//      _this.settings.courseService.removeAllListeners('patch');
     }
   });
 

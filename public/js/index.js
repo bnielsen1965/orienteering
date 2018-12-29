@@ -78,9 +78,7 @@ function authenticated(credentials) {
     menu: menu,
     menuChanged: menuChanged,
     readyCallback: function () {
-      // load main content
       $('#menu').qbit().getQbit().setActive('Home');
-//      loadContent('Home');
     }
   });
 }
@@ -98,6 +96,12 @@ function loadContent(menuItem) {
 //  name = name.toLowerCase().replace(/\s/g, '');
   var args = {};
   switch (menuItem.qbit) {
+    case 'home':
+    args = {
+      courseService: client.service('course')
+    };
+    break;
+
     case 'useradmin':
     args = {
       userService: client.service('users')

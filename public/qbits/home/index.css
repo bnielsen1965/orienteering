@@ -1,0 +1,24 @@
+
+#homereport label {
+  width: 6em;
+  display: inline-block;
+}
+
+#reportlist {
+  border-collapse: collapse;
+}
+
+#reportlist tr td {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+}
+
+#reportlist tr th {
+  border-bottom: 1px solid black;
+  padding: 5px 10px 0 10px;
+  width: 10em;
+}
+
+#reportlist tr:last td {
+  border-bottom: none;
+}
