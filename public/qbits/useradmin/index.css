@@ -18,6 +18,14 @@
   width: 10em;
 }
 
+#userlist tr:nth-child(even) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #userlist tr:last td {
   border-bottom: none;
 }

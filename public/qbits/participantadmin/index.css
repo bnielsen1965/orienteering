@@ -18,6 +18,14 @@
   width: 10em;
 }
 
+#participantlist tr:nth-child(even) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #participantlist tr:last td {
   border-bottom: none;
 }

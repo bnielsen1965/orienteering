@@ -11,7 +11,10 @@
     // use jQuery qbit to load the Qbit HTML
     jqbit.loadHTML(function () {
       // actions to take after Qbit HTML is loaded
-      $(element).find('select#selcoursename').change(getCheckoutList);
+      $(element).find('select#selcoursename').change(function () {
+        showErrors([]);
+        getCheckoutList();
+      });
       getCourses();
       serviceListeners(settings.courseService);
       settings.smartcardService.on('card_uid', checkoutCardUID);
@@ -136,7 +139,7 @@
         throw new Error('Failed to find course ' + courseName);
       }
       $('#checkoutlist').html('');
-      $('#checkoutlist').append('<tr><th colspan="3">' + courseName + '</th></tr>');
+      $('#checkoutlist').append('<tr><th class="title" colspan="3">' + courseName + '</th></tr>');
       $('#checkoutlist').append('<tr><th>Name</th><th>Card</th><th>Start Time</th></tr>');
       result.data[0].participants.forEach(function (row) {
         $('#checkoutlist').append(

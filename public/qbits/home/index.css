@@ -19,6 +19,14 @@
   width: 10em;
 }
 
+#reportlist tr:nth-child(odd) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #reportlist tr:last td {
   border-bottom: none;
 }

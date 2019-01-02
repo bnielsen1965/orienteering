@@ -19,6 +19,14 @@
   min-width: 5em;
 }
 
+#courselist tr:nth-child(even) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #courselist tr:last td {
   border-bottom: none;
 }

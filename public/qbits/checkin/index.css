@@ -23,6 +23,14 @@
   width: 10em;
 }
 
+#checkinlist tr:nth-child(odd) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #checkinlist tr:last td {
   border-bottom: none;
 }

@@ -5,6 +5,8 @@ ul.menu {
   overflow: auto;
   font-family: "Courier New", Courier, monospace;
   font-weight: bold;
+  float: left;
+  border-bottom: 2px solid #000;
 }
 
 ul.menu li {

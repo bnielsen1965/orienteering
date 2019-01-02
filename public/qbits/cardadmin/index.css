@@ -18,6 +18,14 @@
   width: 10em;
 }
 
+#cardlist tr:nth-child(even) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #cardlist tr:last td {
   border-bottom: none;
 }

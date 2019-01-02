@@ -23,6 +23,14 @@
   width: 10em;
 }
 
+#checkoutlist tr:nth-child(odd) {
+  background-color: #eee;
+}
+
+th.title {
+  font-size: 2em;
+}
+
 #checkoutlist tr:last td {
   border-bottom: none;
 }

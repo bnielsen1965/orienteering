@@ -53,19 +53,68 @@
       if (!result.data.length) {
         throw new Error('Failed to find course ' + courseName);
       }
+      let rows = result.data[0].participants.map(function (row) {
+        console.log(row)
+        row.duration = (row.starttime && row.endtime ? new Date(row.endtime).getTime() - new Date(row.starttime).getTime() : null);
+        return row;
+      });
+      rows.sort(function (a, b) {
+        if (a.duration === b.duration) {
+          return 0;
+        }
+        if (a.duration === null) {
+          return 1;
+        }
+        if (b.duration === null) {
+          return -1;
+        }
+        return (a.duration > b.duration ? 1 : -1);
+      });
       $('#reportlist').html('');
-      $('#reportlist').append('<tr><th colspan="4">' + courseName + '</th></tr>');
-      $('#reportlist').append('<tr><th>Name</th><th>Card</th><th>Start Time</th><th>End Time</th></tr>');
-      result.data[0].participants.forEach(function (row) {
+      $('#reportlist').append('<tr><th class="title" colspan="6">' + courseName + '</th></tr>');
+      $('#reportlist').append('<tr><th>Place</th><th>Name</th><th>Card</th><th>Start Time</th><th>End Time</th><th>Time</tr>');
+      rows.forEach(function (row, ri) {
         $('#reportlist').append(
-          '<tr><td>' + row.participant.lastname + ', ' + row.participant.firstname + '</td>' +
+          '<tr>' +
+          '<td>' + (row.duration ? (ri + 1): '') + '</td>' +
+          '<td>' + row.participant.lastname + ', ' + row.participant.firstname + '</td>' +
           '<td>' + row.card.name + '</td>' +
           '<td>' + (row.starttime ? new Date(row.starttime).toLocaleTimeString() : 'Waiting') + '</td>' +
-          '<td>' + (row.endtime ? new Date(row.endtime).toLocaleTimeString() : 'Waiting') + '</td></tr>'
+          '<td>' + (row.endtime ? new Date(row.endtime).toLocaleTimeString() : 'Waiting') + '</td>' +
+          '<td>' + (row.duration ? formatTime(row.duration) : '') + '</td>' +
+          '</tr>'
         );
       });
     })
     .catch(function (err) { showErrors([err.message]); });
+  }
+
+  function formatTime(t) {
+    console.log(t)
+    let h = 0;
+    let m = 0;
+    let s = 0;
+    h = Math.floor(t / (60 * 60 * 1000));
+    if (h) {
+      t = t % (h * 60 * 60 * 1000);
+    }
+    console.log(h, t)
+    m = Math.floor(t / (60 * 1000));
+    if (m) {
+      t = t % (m * 60 * 1000);
+    }
+    s = Math.floor(t / 1000);
+    if (s) {
+      t = t % (s * 1000);
+    }
+    return zpad(h) + ':' + zpad(m) + ':' + zpad(s) + '.' + zpad(t, 3);
+  }
+
+  function zpad(n, z) {
+    z = z || 2;
+    let p = new Array(z + 1).join('0');
+    let l = ('' + n).length;
+    return p.slice(0, z - l) + n;
   }
 
   // add Qbit qbit plugin list
