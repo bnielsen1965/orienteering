@@ -12,6 +12,7 @@
     jqbit.loadHTML(function () {
       // actions to take after Qbit HTML is loaded
       $(element).find('select#rptcoursename').change(getReportList);
+      $(element).find('#printable').click(printableReport);
       getCourses();
       serviceListeners(settings.courseService);
     });
@@ -42,6 +43,66 @@
       courses.forEach(function (course) {
         $(_this.settings.element).find('select#rptcoursename').append('<option value="' + course.name + '">' + course.name + '</option>');
       });
+    })
+    .catch(function (err) { showErrors([err.message]); });
+  }
+
+  function printableReport() {
+    var courseName = $(_this.settings.element).find('select#rptcoursename').val();
+    _this.settings.courseService.find({ query: { name: courseName } })
+    .then(function (result) {
+      if (!result.data.length) {
+        throw new Error('Failed to find course ' + courseName);
+      }
+      let rows = result.data[0].participants.map(function (row) {
+        row.duration = (row.starttime && row.endtime ? new Date(row.endtime).getTime() - new Date(row.starttime).getTime() : null);
+        return row;
+      });
+      rows.sort(function (a, b) {
+        if (a.duration === b.duration) {
+          return 0;
+        }
+        if (a.duration === null) {
+          return 1;
+        }
+        if (b.duration === null) {
+          return -1;
+        }
+        return (a.duration > b.duration ? 1 : -1);
+      });
+      let html =
+    	'<div class="container">' +
+  		'<div id="main">' +
+      '<div class="container">' +
+      '<div class="left box">' +
+      '<div class="row">' +
+      '<table id="reportlist">' +
+      '<tr><th class="title" colspan="6">' + courseName + '</th></tr>' +
+      '<tr><th>Place</th><th>Name</th><th>Card</th><th>Start Time</th><th>End Time</th><th>Time</tr>';
+
+      rows.forEach(function (row, ri) {
+        let rowhtml = '<tr>' +
+        '<td>' + (row.duration ? (ri + 1): '') + '</td>' +
+        '<td>' + row.participant.lastname + ', ' + row.participant.firstname + '</td>' +
+        '<td>' + row.card.name + '</td>' +
+        '<td>' + (row.starttime ? new Date(row.starttime).toLocaleTimeString() : 'Waiting') + '</td>' +
+        '<td>' + (row.endtime ? new Date(row.endtime).toLocaleTimeString() : 'Waiting') + '</td>' +
+        '<td>' + (row.duration ? formatTime(row.duration) : '') + '</td>' +
+        '</tr>';
+        html += rowhtml;
+      });
+
+      html += '</table>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+    	'</div>';
+
+      var newWindow = window.open('http://localhost:3030/report.html?body=' + encodeURIComponent(html));
+      if (!newWindow) {
+        throw new Error('Failed to open new window. Blocked by browser?');
+      }
+      newWindow.document.body.innerHTML = html;
     })
     .catch(function (err) { showErrors([err.message]); });
   }
@@ -96,7 +157,7 @@
     if (h) {
       t = t % (h * 60 * 60 * 1000);
     }
-    
+
     m = Math.floor(t / (60 * 1000));
     if (m) {
       t = t % (m * 60 * 1000);
