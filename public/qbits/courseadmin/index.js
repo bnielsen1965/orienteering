@@ -33,6 +33,7 @@
 
 
   function createCourse() {
+    showErrors([]);
     _this.settings.courseService.create({
       name: $('input#crname').val(),
       description: $('textarea#crdescription').val(),
@@ -75,17 +76,13 @@
         formHTML += '<option value="' + participant._id.toString() + '">' + participant.lastname + ', ' + participant.firstname + '</option>';
       });
       formHTML += '</select><br>';
-
       formHTML += '<label>Card </label><select id="addcard"><option value="">...</option>';
       cards.forEach(function (card) {
         formHTML += '<option value="' + card.uid + '">' + card.name + '</option>';
       });
       formHTML += '</select><br>';
-
       formHTML += '<label> </label><button id="addtocourse" onclick="$(this).qbit().getQbit().addParticipant();">Add</button><br>';
-
       $('#participantform').html(formHTML);
-
       return _this.settings.courseService.find({ query: { name: name } });
     })
     .then(function (result) {
@@ -117,6 +114,7 @@
   }
 
   function addParticipant() {
+    showErrors([]);
     var participantID = $(_this.settings.element).find('select#addparticipant').val();
     var cardUID = $(_this.settings.element).find('select#addcard').val();
     var courseName = $(_this.settings.element).find('#coursename').text();
@@ -124,10 +122,23 @@
       showErrors(['Must select participant and card.']);
       return;
     }
+
     var addParticipant = {};
-    _this.settings.participantService.get(participantID)
+    participantIsActive(participantID)
+    .then(function (isActive) {
+      if (isActive) {
+        throw new Error('Participant already active in a course.');
+      }
+      return _this.settings.participantService.get(participantID);
+    })
     .then(function (doc) {
       addParticipant.participant = doc;
+      return cardIsActive(cardUID);
+    })
+    .then(function (isActive) {
+      if (isActive) {
+        throw new Error('Card already active in a course.');
+      }
       return _this.settings.cardService.find({ query: { uid: cardUID } });
     })
     .then(function (result) {
@@ -150,6 +161,64 @@
       return _this.settings.courseService.patch(result.data[0]._id.toString(), { $addToSet: { participants: addParticipant } });
     })
     .catch(function (err) { showErrors([err.message]); });
+  }
+
+  // check if a participant is actively participating in any course
+  function participantIsActive(participantID) {
+    return new Promise(function (resolve, reject) {
+      // make sure participant is not already active in a course
+      _this.settings.courseService.find({ query: {
+        participants: {
+          $elemMatch: {
+            "participant._id": participantID,
+            $or: [
+              { "starttime": { $exists: false } },
+              { "endtime": { $exists: false } }
+            ]
+          }
+        }
+      }})
+      .then(function (result) {
+        if (result.total) {
+          resolve(true);
+        }
+        else {
+          resolve(false);
+        }
+      })
+      .catch(function (err) {
+        reject(err);
+      });
+    });
+  }
+
+  // check if a card is actively participating in any course
+  function cardIsActive(cardUID) {
+    return new Promise(function (resolve, reject) {
+      // make sure card is not already active in a course
+      _this.settings.courseService.find({ query: {
+        participants: {
+          $elemMatch: {
+            "card.uid": cardUID,
+            $or: [
+              { "starttime": { $exists: false } },
+              { "endtime": { $exists: false } }
+            ]
+          }
+        }
+      }})
+      .then(function (result) {
+        if (result.total) {
+          resolve(true);
+        }
+        else {
+          resolve(false);
+        }
+      })
+      .catch(function (err) {
+        reject(err);
+      });
+    });
   }
 
   function removeParticipant(participantID) {

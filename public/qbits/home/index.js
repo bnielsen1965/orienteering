@@ -54,7 +54,6 @@
         throw new Error('Failed to find course ' + courseName);
       }
       let rows = result.data[0].participants.map(function (row) {
-        console.log(row)
         row.duration = (row.starttime && row.endtime ? new Date(row.endtime).getTime() - new Date(row.starttime).getTime() : null);
         return row;
       });
@@ -90,7 +89,6 @@
   }
 
   function formatTime(t) {
-    console.log(t)
     let h = 0;
     let m = 0;
     let s = 0;
@@ -98,7 +96,7 @@
     if (h) {
       t = t % (h * 60 * 60 * 1000);
     }
-    console.log(h, t)
+    
     m = Math.floor(t / (60 * 1000));
     if (m) {
       t = t % (m * 60 * 1000);

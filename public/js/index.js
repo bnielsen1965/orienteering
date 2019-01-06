@@ -8,8 +8,9 @@ var title = 'Orienteering';
 
 var menuLabels = [
   { label: "Home", qbit: 'home' },
-  { label: "Check Out", qbit: 'checkout' },
-  { label: "Check In", qbit: 'checkin' },
+//  { label: "Check Out", qbit: 'checkout' },
+//  { label: "Check In", qbit: 'checkin' },
+  { label: "Check Point", qbit: 'checkpoint' },
   { label: "Participants", qbit: 'participantadmin', groups: ['admin', 'manager'] },
   { label: "Cards", qbit: 'cardadmin', groups: ['admin', 'manager'] },
   { label: "Courses", qbit: 'courseadmin', groups: ['admin', 'manager'] },
@@ -127,6 +128,17 @@ function loadContent(menuItem) {
     args = {
       smartcardService: client.service('smartcard'),
       cardService: client.service('card')
+    };
+    break;
+
+    case 'checkpoint':
+    args = {
+      courseService: client.service('course'),
+      participantService: client.service('participant'),
+      cardService: client.service('card'),
+      smartcardService: client.service('smartcard'),
+      chimeSuccess: 'audio/chime_success.wav',
+      chimeFail: 'audio/chime_fail.wav'
     };
     break;
 

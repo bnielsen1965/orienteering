@@ -1,0 +1,17 @@
+
+#checkpointlist {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.courserow:nth-child(even) {
+  background-color: #eee;
+}
+
+.ready {
+  color: green;
+}
+
+.delay {
+  color: red;
+}
