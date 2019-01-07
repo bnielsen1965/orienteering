@@ -12,7 +12,7 @@
     jqbit.loadHTML(function () {
       // actions to take after Qbit HTML is loaded
       $(element).find('select#rptcoursename').change(getReportList);
-      $(element).find('#printable').click(printableReport);
+//      $(element).find('#printable').click(printableReport);
       getCourses();
       serviceListeners(settings.courseService);
     });
@@ -46,7 +46,7 @@
     })
     .catch(function (err) { showErrors([err.message]); });
   }
-
+/*
   function printableReport() {
     var courseName = $(_this.settings.element).find('select#rptcoursename').val();
     _this.settings.courseService.find({ query: { name: courseName } })
@@ -106,7 +106,7 @@
     })
     .catch(function (err) { showErrors([err.message]); });
   }
-
+*/
   function getReportList() {
     var courseName = $(_this.settings.element).find('select#rptcoursename').val();
     _this.settings.courseService.find({ query: { name: courseName } })
@@ -130,15 +130,32 @@
         }
         return (a.duration > b.duration ? 1 : -1);
       });
+
       $('#reportlist').html('');
       $('#reportlist').append('<tr><th class="title" colspan="6">' + courseName + '</th></tr>');
       $('#reportlist').append('<tr><th>Place</th><th>Name</th><th>Card</th><th>Start Time</th><th>End Time</th><th>Time</tr>');
+
+      $('#reportlist-description').html('<pre>' + result.data[0].description + '</pre>');
+      $('#reportlist-printable').html('');
+      $('#reportlist-printable').append('<tr><th class="title" colspan="6">' + courseName + '</th></tr>');
+      $('#reportlist-printable').append('<tr><th>Place</th><th>Name</th><th>Start Time</th><th>End Time</th><th>Time</tr>');
+
       rows.forEach(function (row, ri) {
         $('#reportlist').append(
           '<tr>' +
           '<td>' + (row.duration ? (ri + 1): '') + '</td>' +
           '<td>' + row.participant.lastname + ', ' + row.participant.firstname + '</td>' +
           '<td>' + row.card.name + '</td>' +
+          '<td>' + (row.starttime ? new Date(row.starttime).toLocaleTimeString() : 'Waiting') + '</td>' +
+          '<td>' + (row.endtime ? new Date(row.endtime).toLocaleTimeString() : 'Waiting') + '</td>' +
+          '<td>' + (row.duration ? formatTime(row.duration) : '') + '</td>' +
+          '</tr>'
+        );
+
+        $('#reportlist-printable').append(
+          '<tr>' +
+          '<td>' + (row.duration ? (ri + 1): '') + '</td>' +
+          '<td>' + row.participant.lastname + ', ' + row.participant.firstname + '</td>' +
           '<td>' + (row.starttime ? new Date(row.starttime).toLocaleTimeString() : 'Waiting') + '</td>' +
           '<td>' + (row.endtime ? new Date(row.endtime).toLocaleTimeString() : 'Waiting') + '</td>' +
           '<td>' + (row.duration ? formatTime(row.duration) : '') + '</td>' +

@@ -4,22 +4,22 @@
   display: inline-block;
 }
 
-#reportlist {
+#reportlist-printable, #reportlist {
   border-collapse: collapse;
 }
 
-#reportlist tr td {
+#reportlist-printable tr td, #reportlist tr td {
   border-bottom: 1px solid black;
   padding: 5px 10px 0 10px;
 }
 
-#reportlist tr th {
+#reportlist-printable tr th, #reportlist tr th {
   border-bottom: 1px solid black;
   padding: 5px 10px 0 10px;
   width: 10em;
 }
 
-#reportlist tr:nth-child(odd) {
+#reportlist-printable tr:nth-child(odd), #reportlist tr:nth-child(odd) {
   background-color: #eee;
 }
 
@@ -27,6 +27,29 @@ th.title {
   font-size: 2em;
 }
 
-#reportlist tr:last td {
+#reportlist-printable tr:last td, #reportlist tr:last td {
   border-bottom: none;
+}
+
+#reportlist-print {
+    display: none;
+}
+
+#reportlist-description {
+  font-size: 1.5em;
+  padding: 0 10em;
+}
+
+@media print {
+  #home {
+    display: none;
+  }
+
+  .menu {
+    display: none;
+  }
+
+  #reportlist-print {
+    display: block;
+  }
 }
