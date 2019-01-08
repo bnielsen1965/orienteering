@@ -105,7 +105,7 @@
       { query: query }
     );
     if (!docs.length) {
-      throw new Error('Check in failed on course ' + course.name + '.');
+      throw new Error('Finish course failed on course ' + course.name + '.');
     }
     return;
   }
@@ -115,7 +115,7 @@
     var pi = course.participants.reduce(function (acc, row, rowi) {
       return (row.card.uid === uid ? rowi : acc);
     }, -1);
-    // check that next check out is ready
+    // check that next start course is ready
     let laststarttime = new Date(course.laststarttime || 0);
     if (Date.now() - laststarttime.getTime() < course.delay * 60 * 1000) {
       throw new Error('Wait until course ' + course.name + ' is ready.');
@@ -136,7 +136,7 @@
       { query: query }
     );
     if (!docs.length) {
-      throw new Error('Check out failed on course ' + course.name + '.');
+      throw new Error('Start course failed on course ' + course.name + '.');
     }
     return;
   }
@@ -166,7 +166,7 @@
       return p.card.uid === uid ? p : f;
     }, null);
     let lastcheck = participant.participant.lastname + ', ' + participant.participant.firstname;
-    lastcheck += ' :: ' + (!participant.endtime ? 'Check Out' : 'Check In');
+    lastcheck += ' :: ' + (!participant.endtime ? 'Start Course' : 'Finished Course');
     lastcheck += ' :: ' + (!participant.endtime ? new Date(participant.starttime).toLocaleTimeString() : new Date(participant.endtime).toLocaleTimeString());
     $(_this.settings.element).find('#checkpointlist > #' + course._id.toString()).find('.lastcheck').html(lastcheck);
   }
