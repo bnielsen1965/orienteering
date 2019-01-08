@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Orienteering</title>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<style>
+
+	#homereport label {
+	  width: 6em;
+	  display: inline-block;
+	}
+
+	#reportlist {
+	  border-collapse: collapse;
+	}
+
+	#reportlist tr td {
+	  border-bottom: 1px solid black;
+	  padding: 5px 10px 0 10px;
+	}
+
+	#reportlist tr th {
+	  border-bottom: 1px solid black;
+	  padding: 5px 10px 0 10px;
+	  width: 10em;
+	}
+
+	#reportlist tr:nth-child(odd) {
+	  background-color: #eee;
+	}
+
+	th.title {
+	  font-size: 2em;
+	}
+
+	#reportlist tr:last td {
+	  border-bottom: none;
+	}
+
+	</style>
+  <script src="js/jquery-3.3.1.min.js"></script>
+	<script>
+	$(document).ready(function () {
+		var body = qs('body');
+		$('body').html(body);
+	});
+
+	function qs(key) {
+    key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+    var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+	}
+	</script>
+</head>
+<body>
+</body>
+</html>
