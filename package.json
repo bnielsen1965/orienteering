@@ -24,7 +24,7 @@
     "@feathersjs/socketio-client": "^1.1.4",
     "feathers-memory": "^2.2.0",
     "feathers-nedb": "^3.1.0",
-    "nedb-core": "^3.0.6",
+    "nedb": "^1.8.0",
     "pcsclite": "^0.6.0",
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.1.1"

@@ -1,7 +1,7 @@
 
 const Path = require('path');
 const Local = require('@feathersjs/authentication-local')
-const NeDB = require('nedb-core');
+const NeDB = require('nedb');
 const Service = require('feathers-nedb');
 const Permissions = require('./permissions');
 
