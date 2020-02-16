@@ -45,7 +45,10 @@
         return p.card.uid === uid ? p : f;
       }, null);
       if (!participant.starttime) {
-        return setParticipantStarttime(course, uid);
+        if (course.massStart) {
+          throw new Error('Mass start has not initiated this card!');
+        }
+        return setParticipantStarttime(course, uid, new Date());
       }
       else if (!participant.endtime) {
         return setParticipantEndTime(course, uid);
@@ -110,7 +113,7 @@
     return;
   }
 
-  async function setParticipantStarttime(course, uid) {
+  async function setParticipantStarttime(course, uid, starttime) {
     // find the array index for the participant
     var pi = course.participants.reduce(function (acc, row, rowi) {
       return (row.card.uid === uid ? rowi : acc);
@@ -125,7 +128,7 @@
       _id: course._id.toString()
     };
     query['participants.' + pi + '.card.uid'] = uid;
-    var starttime = new Date();
+//    var starttime = new Date();
     course.participants[pi].starttime = starttime;
     var set = { laststarttime: starttime };
     set['participants.' + pi + '.starttime'] = starttime;
@@ -136,7 +139,7 @@
       { query: query }
     );
     if (!docs.length) {
-      throw new Error('Start course failed on course ' + course.name + '.');
+      throw new Error('Start participant failed on course ' + course.name + '.');
     }
     return;
   }
@@ -181,6 +184,7 @@
         row.html(
           '<div class="row"><div class="left">Course:&nbsp;</div>' +
           '<div class="left coursename">' + course.name + ' ::&nbsp</div><div class="left coursestate"></div>' +
+          (course.massStart && !course.started ? '<button type="button" class="massstart">Mass Start</button>' : '') +
           '</div>' +
           '<div class="row">' +
           '<div class="left">Last Check:&nbsp;</div>' +
@@ -188,9 +192,37 @@
           '</div>'
         );
         $('#checkpointlist').append(row);
+        $(row).find('button.massstart').click(() => massStartClick(row));
       });
     })
     .catch(function (err) { showErrors([err.message]); });
+  }
+
+  function massStartClick (courserow) {
+    let course = $(courserow).data('course');
+    if (confirm('Begin mass start for coruse ' + course.name + '?')) {
+      let starttime = new Date();
+      _this.settings.courseService.patch(
+        null,
+        { $set: { started: starttime } },
+        { query: { _id: course._id.toString(), started: { $exists: 0 } } }
+      )
+      .then(docs => {
+        if (!docs.length) {
+          throw new Error('Mass start failed on course ' + course.name + '.');
+        }
+        $(courserow).find('button.massstart').remove();
+        course.participants.forEach(participant => {
+          setParticipantStarttime(course, participant.card.uid, starttime)
+            .catch(error => {
+              showErrors([error.message]);
+            });
+        })
+      })
+      .catch(error => {
+        showErrors([error.message]);
+      });
+    }
   }
 
   function updateCourseStatus() {
